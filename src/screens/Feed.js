@@ -1,134 +1,289 @@
-import React, { Component } from 'react'
-import { Image, View, TouchableOpacity, ActivityIndicator } from 'react-native'
-import { Text, Avatar, withStyles, List } from 'react-native-ui-kitten'
-import { withFirebaseHOC } from '../utils'
+import React from "react";
+import {
+  SafeAreaView,
+  StyleSheet,
+  Text,
+  View,
+  Dimensions,
+  Image,
+  Animated,
+  PanResponder,
+  Button,
+} from "react-native";
 
-const DATA = [
-    {
-      id: 1,
-      postTitle: 'Planet of Nature',
-      avatarURI:
-        'https://images.unsplash.com/photo-1559526323-cb2f2fe2591b?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1050&q=80',
-      imageURI:
-        'https://images.unsplash.com/photo-1482822683622-00effad5052e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1050&q=80',
-      randomText:
-        'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. '
-    },
-    {
-      id: 2,
-      postTitle: 'Lampost',
-      avatarURI:
-        'https://images.unsplash.com/photo-1559526323-cb2f2fe2591b?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1050&q=80',
-      imageURI:
-        'https://images.unsplash.com/photo-1482822683622-00effad5052e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1050&q=80',
-      randomText:
-        'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. '
-    }
-  ]
+const SCREEN_HEIGHT = Dimensions.get("window").height;
+const SCREEN_WIDTH = Dimensions.get("window").width;
 
+const Users = [
+  { id: "1", uri: require("../assets/image1.jpg") },
+  { id: "2", uri: require("../assets/image2.jpg") },
+  { id: "3", uri: require("../assets/image3.jpg") },
+  { id: "4", uri: require("../assets/image4.jpg") },
+  { id: "5", uri: require("../assets/image5.jpg") },
+];
 
+class Homescreen extends React.Component {
+  constructor() {
+    super();
 
-class _Feed extends Component {
-    state = { DATA: null, isRefreshing: false }
+    this.position = new Animated.ValueXY();
+    this.state = {
+      currentIndex: 0,
+    };
 
-    componentDidMount() {
-        this.fetchPosts()
-      }
-    
-      fetchPosts = async () => {
-        try {
-          const posts = await this.props.firebase.getPosts()
-          console.log(posts)
-          this.setState({ DATA: posts, isRefreshing: false })
-        } catch (e) {
-          console.error(e)
+    this.rotate = this.position.x.interpolate({
+      inputRange: [-SCREEN_WIDTH / 2, 0, SCREEN_WIDTH / 2],
+      outputRange: ["-10deg", "0deg", "10deg"],
+      extrapolate: "clamp",
+    });
+
+    this.rotateAndTranslate = {
+      transform: [
+        {
+          rotate: this.rotate,
+        },
+        ...this.position.getTranslateTransform(),
+      ],
+    };
+
+    this.likeOpacity = this.position.x.interpolate({
+      inputRange: [-SCREEN_WIDTH / 2, 0, SCREEN_WIDTH / 2],
+      outputRange: [0, 0, 1],
+      extrapolate: "clamp",
+    });
+    this.dislikeOpacity = this.position.x.interpolate({
+      inputRange: [-SCREEN_WIDTH / 2, 0, SCREEN_WIDTH / 2],
+      outputRange: [1, 0, 0],
+      extrapolate: "clamp",
+    });
+
+    this.nextCardOpacity = this.position.x.interpolate({
+      inputRange: [-SCREEN_WIDTH / 2, 0, SCREEN_WIDTH / 2],
+      outputRange: [1, 0, 1],
+      extrapolate: "clamp",
+    });
+    this.nextCardScale = this.position.x.interpolate({
+      inputRange: [-SCREEN_WIDTH / 2, 0, SCREEN_WIDTH / 2],
+      outputRange: [1, 0.8, 1],
+      extrapolate: "clamp",
+    });
+  }
+  componentWillMount() {
+    this.PanResponder = PanResponder.create({
+      onStartShouldSetPanResponder: (evt, gestureState) => true,
+      onPanResponderMove: (evt, gestureState) => {
+        this.position.setValue({ x: gestureState.dx, y: gestureState.dy });
+      },
+      onPanResponderRelease: (evt, gestureState) => {
+        if (gestureState.dx > 120) {
+          Animated.spring(this.position, {
+            toValue: { x: SCREEN_WIDTH + 100, y: gestureState.dy },
+          }).start(() => {
+            this.setState({ currentIndex: this.state.currentIndex + 1 }, () => {
+              this.position.setValue({ x: 0, y: 0 });
+            });
+          });
+        } else if (gestureState.dx < -120) {
+          Animated.spring(this.position, {
+            toValue: { x: -SCREEN_WIDTH - 100, y: gestureState.dy },
+          }).start(() => {
+            this.setState({ currentIndex: this.state.currentIndex + 1 }, () => {
+              this.position.setValue({ x: 0, y: 0 });
+            });
+          });
+        } else {
+          Animated.spring(this.position, {
+            toValue: { x: 0, y: 0 },
+            friction: 4,
+          }).start();
         }
-      }
-      onRefresh = () => {
-        this.setState({ isRefreshing: true })
-        this.fetchPosts()
-      }
+      },
+    });
+  }
 
-      render() {
-        const renderItem = ({ item }) => (
-          <View style={this.props.themedStyle.card}>
-            <Image
-              source={{ uri: item.postPhoto }}
-              style={this.props.themedStyle.cardImage}
-            />
-            <View style={this.props.themedStyle.cardHeader}>
-              <Text category='s1' style={this.props.themedStyle.cardTitle}>
-                {item.postTitle}
+  renderUsers = () => {
+    return Users.map((item, i) => {
+      if (i < this.state.currentIndex) {
+        return null;
+      } else if (i == this.state.currentIndex) {
+        return (
+          <Animated.View
+            {...this.PanResponder.panHandlers}
+            key={item.id}
+            style={[
+              this.rotateAndTranslate,
+              {
+                height: SCREEN_HEIGHT - 120,
+                width: SCREEN_WIDTH,
+                padding: 10,
+                position: "contain",
+              },
+            ]}
+          >
+            <Animated.View
+              style={{
+                opacity: this.likeOpacity,
+                transform: [{ rotate: "-30deg" }],
+                position: "absolute",
+                top: 50,
+                left: 40,
+                zIndex: 1000,
+              }}
+            >
+              <Text
+                style={{
+                  borderWidth: 1,
+                  borderColor: "green",
+                  color: "green",
+                  fontSize: 32,
+                  fontWeight: "800",
+                  padding: 10,
+                }}
+              >
+                LIKE
               </Text>
-              <TouchableOpacity
-                onPress={() => this.props.navigation.navigate('Profile')}>
-                <Avatar
-                  source={{
-                    uri: this.state.Avatar
-                  }}
-                  size='small'
-                  style={this.props.themedStyle.cardAvatar}
-                />
-              </TouchableOpacity>
-            </View>
-            <View style={this.props.themedStyle.cardContent}>
-              <Text category='p2'>{item.postDescription}</Text>
-            </View>
-          </View>
-        )
-    
-        if (this.state.DATA != null) {
-          return (
-            <List
-              style={this.props.themedStyle.container}
-              data={this.state.DATA}
-              renderItem={renderItem}
-              keyExtractor={this.state.DATA.id}
-              refreshing={this.state.isRefreshing}
-              onRefresh={() => this.onRefresh()}
+            </Animated.View>
+
+            <Animated.View
+              style={{
+                opacity: this.dislikeOpacity,
+                transform: [{ rotate: "30deg" }],
+                position: "absolute",
+                top: 50,
+                right: 40,
+                zIndex: 1000,
+              }}
+            >
+              <Text
+                style={{
+                  borderWidth: 1,
+                  borderColor: "red",
+                  color: "red",
+                  fontSize: 32,
+                  fontWeight: "800",
+                  padding: 10,
+                }}
+              >
+                NOPE
+              </Text>
+            </Animated.View>
+
+            <Image
+              style={{
+                flex: 1,
+                height: null,
+                width: null,
+                resizeMode: "contain",
+                borderRadius: 20,
+              }}
+              source={item.uri}
             />
-          )
-        } else
-          return (
-            <View
-              style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-              <ActivityIndicator size='large' />
-            </View>
-          )
-      }  
+          </Animated.View>
+        );
+      } else {
+        return (
+          <Animated.View
+            key={item.id}
+            style={[
+              {
+                opacity: this.nextCardOpacity,
+                transform: [{ scale: this.nextCardScale }],
+                height: SCREEN_HEIGHT - 120,
+                width: SCREEN_WIDTH,
+                padding: 10,
+                position: "absolute",
+              },
+            ]}
+          >
+            <Animated.View
+              style={{
+                opacity: 0,
+                transform: [{ rotate: "-30deg" }],
+                position: "absolute",
+                top: 50,
+                left: 40,
+                zIndex: 1000,
+              }}
+            >
+              <Text
+                style={{
+                  borderWidth: 1,
+                  borderColor: "green",
+                  color: "green",
+                  fontSize: 32,
+                  fontWeight: "800",
+                  padding: 10,
+                }}
+              >
+                LIKE
+              </Text>
+            </Animated.View>
+
+            <Animated.View
+              style={{
+                opacity: 0,
+                transform: [{ rotate: "30deg" }],
+                position: "contain",
+                top: 50,
+                right: 40,
+                zIndex: 1000,
+              }}
+            >
+              <Text
+                style={{
+                  borderWidth: 1,
+                  borderColor: "red",
+                  color: "red",
+                  fontSize: 32,
+                  fontWeight: "800",
+                  padding: 10,
+                }}
+              >
+                NOPE
+              </Text>
+            </Animated.View>
+
+            <Image
+              style={{
+                flex: 1,
+                height: null,
+                width: null,
+                resizeMode: "contain",
+                borderRadius: 20,
+              }}
+              source={item.uri}
+            />
+          </Animated.View>
+        );
+      }
+    }).reverse();
+  };
+
+  render() {
+    return (
+      <View style={{ flex: 1 }}>
+        <View style={{ height: 60 }}></View>
+
+        <View style={{ flex: 1 }}>{this.renderUsers()}</View>
+        <View style={{ height: 60 }}></View>
+      </View>
+    );
+  }
 }
 
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: "#fff",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  Button: {
+    backgroundColor: "#9DFEB7",
+  },
+  Button2: {
+    backgroundColor: "#9DFEB7",
+  },
+});
 
-
-export default Feed = withFirebaseHOC(
-    withStyles(_Feed, theme => ({
-      container: {
-        flex: 1
-      },
-      card: {
-        backgroundColor: theme['color-basic-100'],
-        marginBottom: 25
-      },
-      cardImage: {
-        width: '100%',
-        height: 300
-      },
-      cardHeader: {
-        padding: 10,
-        flexDirection: 'row',
-        alignItems: 'center',
-        justifyContent: 'space-between'
-      },
-      cardTitle: {
-        color: theme['color-basic-1000']
-      },
-      cardAvatar: {
-        marginRight: 16
-      },
-      cardContent: {
-        padding: 10,
-        borderWidth: 0.25,
-        borderColor: theme['color-basic-600']
-      }
-    }))
-  )
+export default Homescreen;
