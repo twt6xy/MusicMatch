@@ -1,21 +1,22 @@
-import { StatusBar } from 'expo-status-bar';
-import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import React, { Fragment } from 'react';
+import { mapping, light as theme } from '@eva-design/eva';
+import { ApplicationProvider, Layout, Text, IconRegistry } from 'react-native-ui-kitten';
+import { EvaIconsPack } from '@ui-kitten/eva-icons';
 
-export default function App() {
-  return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
-  );
-}
+import Firebase, { FirebaseProvider } from './src/utils'
+import AppContainer from './src/navigation'
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
+const strictTheme = { ['text-font-family']: 'OpenSans' }; // <-- Your Font
+
+const App = () => (
+  <>
+    <IconRegistry icons={EvaIconsPack} />
+    <ApplicationProvider mapping={mapping} theme={theme}>
+      <FirebaseProvider value={Firebase}>
+        <AppContainer />
+      </FirebaseProvider>
+    </ApplicationProvider>
+  </>
+);
+
+export default App;
