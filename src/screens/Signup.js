@@ -18,6 +18,7 @@ class Signup extends Component {
     name: "",
     email: "",
     password: "",
+    spotifyId: "",
   };
 
   onChangeName = (name) => {
@@ -30,8 +31,12 @@ class Signup extends Component {
     this.setState({ password });
   };
 
+  onChangeSpotify = (spotifyId) => {
+    this.setState({ spotifyId });
+  };
+
   handleOnSignup = async () => {
-    const { name, email, password } = this.state;
+    const { name, email, password, spotifyId } = this.state;
 
     try {
       const response = await this.props.firebase.signupWithEmail(
@@ -41,7 +46,7 @@ class Signup extends Component {
 
       if (response.user.uid) {
         const { uid } = response.user;
-        const userData = { email, name, uid };
+        const userData = { email, name, uid, spotifyId };
         await this.props.firebase.createNewUser(userData);
         this.props.navigation.navigate("App");
       }
@@ -54,7 +59,9 @@ class Signup extends Component {
           "\n" +
           "• Password is at least 6 characters" +
           "\n" +
-          "• Email is not already in use by another user"
+          "• Email is not already in use by another user" +
+          "\n" +
+          "• Spotify Id is input correctly"
       );
     }
   };
@@ -63,7 +70,7 @@ class Signup extends Component {
     this.props.navigation.navigate("Login");
   };
   render() {
-    const { name, email, password } = this.state;
+    const { name, email, password, spotifyId } = this.state;
     return (
       <TouchableWithoutFeedback
         onPress={() => {
@@ -117,6 +124,16 @@ class Signup extends Component {
                 secureTextEntry={true}
                 value={password}
                 onChangeText={this.onChangePassword}
+              />
+              <TextInput
+                style={styles.input}
+                placeholder="Spotify Username"
+                placeholderTextColor="#B1B1B1"
+                returnKeyType="next"
+                textContentType="name"
+                value={spotifyId}
+                autoCapitalize="none"
+                onChangeText={this.onChangeSpotify}
               />
             </View>
 

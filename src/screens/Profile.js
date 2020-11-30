@@ -56,7 +56,7 @@ class _Profile extends Component {
         <View style={[themedStyle.header, themedStyle.bordered]}>
           <View>
             <Avatar
-              source={{ uri: userDetails.avatar }}
+              source={{ uri: userDetails.avatarImage }}
               size="giant"
               style={{ width: 100, height: 100 }}
             />
@@ -69,33 +69,12 @@ class _Profile extends Component {
           <Text category="h6" style={themedStyle.text}>
             {userDetails.name}
           </Text>
+          <Text> </Text>
+          <Text category="h6" style={themedStyle.text}>
+            Spotify ID: {userDetails.spotifyId}
+          </Text>
         </View>
-        <View style={[themedStyle.userInfo, themedStyle.bordered]}>
-          <View style={themedStyle.section}>
-            <Text category="s1" style={themedStyle.space}>
-              {images.length}
-            </Text>
-            <Text appearance="hint" category="s2">
-              Posts
-            </Text>
-          </View>
-          <View style={themedStyle.section}>
-            <Text category="s1" style={themedStyle.space}>
-              0
-            </Text>
-            <Text appearance="hint" category="s2">
-              Followers
-            </Text>
-          </View>
-          <View style={themedStyle.section}>
-            <Text category="s1" style={themedStyle.space}>
-              0
-            </Text>
-            <Text appearance="hint" category="s2">
-              Following
-            </Text>
-          </View>
-        </View>
+
         <View style={themedStyle.buttons}>
           <Button
             style={themedStyle.button}
@@ -106,9 +85,6 @@ class _Profile extends Component {
             LOGOUT
           </Button>
           <View style={themedStyle.separator} />
-          <Button style={themedStyle.button} appearance="ghost" status="danger">
-            MESSAGE
-          </Button>
         </View>
         <Gallery items={{ uri: images }} />
       </View>
