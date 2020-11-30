@@ -46,12 +46,10 @@ class Login extends Component {
   render() {
     const { email, password } = this.state;
     return (
-      <View
-        style={{ flex: 1, backgroundColor: "#9DFEB7", paddingHorizontal: 30 }}
-      >
+      <View style={{ flex: 1, backgroundColor: "#FFFFFF" }}>
         <View style={{ alignItems: "center", marginTop: 60 }}>
           <Image
-            source={require("../../assets/logo.png")}
+            source={require("../assets/logo.png")}
             width={200}
             height={200}
             fill="#333"
