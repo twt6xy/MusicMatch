@@ -1,10 +1,14 @@
 import React, { Component } from "react";
 import {
   View,
-  SafeAreaView,
-  KeyboardAvoidingView,
-  StyleSheet,
   Image,
+  StyleSheet,
+  KeyboardAvoidingView,
+  SafeAreaView,
+  TextInput,
+  TouchableOpacity,
+  TouchableWithoutFeedback,
+  Keyboard,
 } from "react-native";
 import { Text, Button, Input, Icon } from "react-native-ui-kitten";
 import { withFirebaseHOC } from "../utils";
@@ -36,7 +40,13 @@ class Login extends Component {
       }
     } catch (error) {
       console.log(error);
-      alert("Make sure email and passwords match.");
+      alert(
+        "Please make sure the following fields are correct: " +
+          "\n" +
+          "• Your email is input correctly" +
+          "\n" +
+          "• Your password matches your account"
+      );
     }
   };
 
@@ -46,61 +56,80 @@ class Login extends Component {
   render() {
     const { email, password } = this.state;
     return (
-      <View style={{ flex: 1, backgroundColor: "#FFFFFF" }}>
-        <View style={{ alignItems: "center", marginTop: 60 }}>
-          <Image
-            source={require("../assets/logo.png")}
-            width={200}
-            height={200}
-            fill="#333"
-          />
-        </View>
-        <View style={{ marginTop: 20 }}>
-          <Input
-            style={{ marginTop: 10, fontSize: 16 }}
-            value={email}
-            onChangeText={this.onChangeEmail}
-            label="Email"
-            autoCapitalize="none"
-            autoCompleteType="email"
-            keyboardType="email-address"
-          />
-        </View>
-        <View style={{ marginTop: 20 }}>
-          <Input
-            style={{ marginTop: 10, fontSize: 16 }}
-            label="Password"
-            secureTextEntry={true}
-            value={password}
-            onChangeText={this.onChangePassword}
-          />
-        </View>
-        <View style={styles.button}>
-          <Button onPress={this.handleOnLogin}>Login</Button>
-        </View>
-        <View
-          style={{
-            marginTop: 10,
-            alignItems: "center",
-            justifyContent: "center",
-            flexDirection: "row",
-          }}
-        >
-          <Text style={{ textAlign: "center", fontSize: 14, color: "#abb4bd" }}>
-            Don't have an account?{" "}
-          </Text>
-          <Button
-            onPress={this.handleSignup}
-            status="info"
-            appearance="ghost"
-            style={{
-              paddingHorizontal: 1,
-            }}
-          >
-            Sign up
-          </Button>
-        </View>
-      </View>
+      <TouchableWithoutFeedback
+        onPress={() => {
+          Keyboard.dismiss();
+        }}
+      >
+        <SafeAreaView style={{ flex: 1, backgroundColor: "#FFFFFF" }}>
+          <KeyboardAvoidingView style={styles.container} behavior="padding">
+            <Image
+              style={styles.tinyLogo}
+              source={require("../assets/logo.png")}
+            />
+            <Text
+              style={{
+                fontSize: 32,
+                fontWeight: "700",
+                color: "black",
+                paddingBottom: 20,
+              }}
+            >
+              Music Match
+            </Text>
+            <View style={styles.form}>
+              <TextInput
+                style={styles.input}
+                placeholder="Email"
+                placeholderTextColor="#B1B1B1"
+                returnKeyType="next"
+                keyboardType="email-address"
+                textContentType="emailAddress"
+                autoCompleteType="email"
+                value={email}
+                autoCapitalize="none"
+                onChangeText={this.onChangeEmail}
+              />
+              <TextInput
+                style={styles.input}
+                placeholder="Password"
+                placeholderTextColor="#B1B1B1"
+                returnKeyType="done"
+                textContentType="newPassword"
+                secureTextEntry={true}
+                value={password}
+                onChangeText={this.onChangePassword}
+              />
+            </View>
+
+            <TouchableOpacity
+              style={{ width: "86%", marginTop: 10 }}
+              onPress={this.handleOnLogin}
+            >
+              <View style={styles.signInButton}>
+                <Text
+                  style={{
+                    fontSize: 16,
+                    letterSpacing: 0.5,
+                    color: "#000000",
+                  }}
+                >
+                  Sign In
+                </Text>
+              </View>
+            </TouchableOpacity>
+
+            <View style={{ marginTop: 10 }}>
+              <Text
+                style={{ fontWeight: "200", fontSize: 16, textAlign: "center" }}
+                onPress={this.handleSignup}
+              >
+                Don't have an Account?
+              </Text>
+            </View>
+          </KeyboardAvoidingView>
+        </SafeAreaView>
+      </TouchableWithoutFeedback>
     );
   }
 }
@@ -110,11 +139,20 @@ const styles = StyleSheet.create({
     flexDirection: "column",
     alignItems: "center",
   },
-  tinyLogo: {
-    width: 100,
-    height: 100,
-    flexDirection: "column",
-    justifyContent: "space-around",
+  form: {
+    width: "86%",
+    marginTop: 15,
+  },
+  input: {
+    height: 48,
+    borderRadius: 5,
+    overflow: "hidden",
+    backgroundColor: "white",
+    marginTop: 10,
+    marginBottom: 10,
+    marginLeft: 30,
+    marginRight: 30,
+    paddingLeft: 16,
   },
   button: {
     backgroundColor: "#9DFEB7",
@@ -126,6 +164,23 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     alignItems: "center",
     justifyContent: "center",
+  },
+  signInButton: {
+    backgroundColor: "#9DFEB7",
+    marginLeft: 30,
+    marginRight: 30,
+    marginTop: 20,
+    marginBottom: 20,
+    height: 48,
+    borderRadius: 5,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  tinyLogo: {
+    width: 100,
+    height: 100,
+    flexDirection: "column",
+    justifyContent: "space-around",
   },
 });
 export default withFirebaseHOC(Login);
