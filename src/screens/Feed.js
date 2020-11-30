@@ -113,7 +113,7 @@ class Homescreen extends React.Component {
             style={[
               this.rotateAndTranslate,
               {
-                height: SCREEN_HEIGHT - 120,
+                height: SCREEN_HEIGHT - 300,
                 width: SCREEN_WIDTH,
                 padding: 10,
                 position: "contain",
@@ -188,7 +188,7 @@ class Homescreen extends React.Component {
               {
                 opacity: this.nextCardOpacity,
                 transform: [{ scale: this.nextCardScale }],
-                height: SCREEN_HEIGHT - 120,
+                height: SCREEN_HEIGHT - 300,
                 width: SCREEN_WIDTH,
                 padding: 10,
                 position: "absolute",
