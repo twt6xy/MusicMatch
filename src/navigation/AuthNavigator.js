@@ -1,16 +1,18 @@
-import { createStackNavigator } from 'react-navigation-stack'
-import Login from '../screens/Login'
-import Signup from '../screens/Signup'
+import { createStackNavigator } from "react-navigation-stack";
+import Login from "../screens/Login";
+import Signup from "../screens/Signup";
+import Chat from "../screens/Chat";
 
 const AuthNavigator = createStackNavigator(
   {
     Login: { screen: Login },
-    Signup: { screen: Signup }
+    Signup: { screen: Signup },
+    Chat: { screen: Chat },
   },
   {
-    initialRouteName: 'Login',
-    headerMode: 'none'
+    initialRouteName: "Login",
+    headerMode: "none",
   }
-)
+);
 
-export default AuthNavigator
+export default AuthNavigator;

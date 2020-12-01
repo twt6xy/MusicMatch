@@ -56,7 +56,7 @@ class _Profile extends Component {
         <View style={[themedStyle.header, themedStyle.bordered]}>
           <View>
             <Avatar
-              source={{ uri: userDetails.avatarImage }}
+              source={{ uri: userDetails.avatar }}
               size="giant"
               style={{ width: 100, height: 100 }}
             />
@@ -95,13 +95,14 @@ class _Profile extends Component {
 export default Profile = withFirebaseHOC(
   withStyles(_Profile, (theme) => ({
     root: {
-      backgroundColor: theme["color-basic-100"],
+      backgroundColor: "#FFFFFF",
       marginTop: 60,
     },
     header: {
       alignItems: "center",
       paddingTop: 25,
       paddingBottom: 17,
+      backgroundColor: "#FFFFFF",
     },
     userInfo: {
       flexDirection: "row",
@@ -114,10 +115,11 @@ export default Profile = withFirebaseHOC(
     section: {
       flex: 1,
       alignItems: "center",
+      backgroundColor: "#FFFFFF",
     },
     space: {
       marginBottom: 3,
-      color: theme["color-basic-1000"],
+      color: "#FFFFFF",
     },
     separator: {
       backgroundColor: theme["color-basic-400"],
