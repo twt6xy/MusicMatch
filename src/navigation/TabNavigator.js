@@ -11,19 +11,6 @@ import { FeedNavigator, ProfileNavigator } from "./StackNavigator";
 
 const TabNavigator = createBottomTabNavigator(
   {
-    Activity: {
-      screen: Activity,
-      navigationOptions: {
-        tabBarIcon: ({ focused }) => (
-          <Icon
-            name="message-square-outline"
-            width={32}
-            height={32}
-            fill={focused ? "#111" : "#939393"}
-          />
-        ),
-      },
-    },
     Feed: {
       screen: FeedNavigator,
       navigationOptions: {
@@ -37,6 +24,20 @@ const TabNavigator = createBottomTabNavigator(
         ),
       },
     },
+    Activity: {
+      screen: Activity,
+      navigationOptions: {
+        tabBarIcon: ({ focused }) => (
+          <Icon
+            name="message-square-outline"
+            width={32}
+            height={32}
+            fill={focused ? "#111" : "#939393"}
+          />
+        ),
+      },
+    },
+
     Profile: {
       screen: ProfileNavigator,
       navigationOptions: {
