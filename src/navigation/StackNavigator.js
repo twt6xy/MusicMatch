@@ -7,6 +7,7 @@ import Profile from "../screens/Profile";
 import EditAvatar from "../screens/EditAvatar";
 import Activity from "../screens/Activity";
 import Chat from "../screens/Chat";
+import Chat2 from "../screens/Chat2";
 export const FeedNavigator = createAppContainer(
   createStackNavigator({
     Feed: {
@@ -33,6 +34,19 @@ export const ProfileNavigator = createAppContainer(
         navigationOptions: {
           headerTitle: "Chat",
         },
+
+        Activity: {
+          screen: Activity,
+          navigationOptions: {
+            headerTitle: "Playlists you've liked",
+          },
+          Chat2: {
+            screen: Chat2,
+            navigationOptions: {
+              headerTitle: "Chat",
+            },
+          },
+        },
       },
     },
   })
@@ -40,10 +54,10 @@ export const ProfileNavigator = createAppContainer(
 
 export const ChatNavigator = createAppContainer(
   createStackNavigator({
-    Chat: {
+    Activity: {
       screen: Activity,
       navigationOptions: {
-        headerTitle: "Chat",
+        headerTitle: "Playlist you've liked",
       },
     },
   })

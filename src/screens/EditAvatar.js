@@ -56,6 +56,9 @@ class EditAvatar extends Component {
             </Button>
           )}
         </View>
+        <Button onPress={this.onSubmit} style={styles.Button}>
+          Submit Changes
+        </Button>
       </View>
     );
   }
@@ -67,6 +70,7 @@ const styles = StyleSheet.create({
     padding: 10,
     margin: 30,
     borderColor: "#9DFEB7",
+    borderWidth: 4,
   },
 });
 export default withFirebaseHOC(EditAvatar);

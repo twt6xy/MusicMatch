@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { View, TouchableOpacity, Image } from "react-native";
+import { View, TouchableOpacity, Image, ScrollView } from "react-native";
 import { Text, Button, withStyles, Avatar, Icon } from "react-native-ui-kitten";
 import { withFirebaseHOC } from "../utils";
 import Gallery from "../components/Gallery";
@@ -26,48 +26,85 @@ class Activity extends Component {
       console.log(error);
     }
   };
-  handleEditAvatarNavigation = () => {
+  handleChatNavigation = () => {
     this.props.navigation.navigate("Chat");
+  };
+
+  handleChat2Navigation = () => {
+    this.props.navigation.navigate("Chat2");
   };
 
   render() {
     const { images, userDetails } = this.state;
     const { themedStyle } = this.props;
     return (
-      <View style={themedStyle.root}>
-        <Image
-          style={themedStyle.tinyLogo}
-          source={require("../assets/image1.jpg")}
-        />
-        <View style={[themedStyle.header, themedStyle.bordered]}>
-          <Text category="h6" style={themedStyle.text}>
-            {userDetails.name}
-          </Text>
-          <Text> </Text>
-          <Text category="h6" style={themedStyle.text}>
-            Joe Mama
-          </Text>
-        </View>
-
-        <TouchableOpacity
-          style={{ width: "86%", marginTop: 10, alignItems: "center" }}
-          onPress={() => this.handleEditAvatarNavigation()}
-        >
-          <View style={themedStyle.signUpButton}>
-            <Text
-              style={{
-                fontSize: 16,
-                fontWeight: 200,
-                letterSpacing: 0.5,
-                color: "#000000",
-              }}
-            >
-              Chat with Joe Mama
+      <ScrollView bounces={true} directionalLockEnabled={true}>
+        <View style={themedStyle.root}>
+          <Image
+            style={themedStyle.tinyLogo}
+            source={require("../assets/image1.jpg")}
+          />
+          <View style={[themedStyle.header, themedStyle.bordered]}>
+            <Text category="h6" style={themedStyle.text}>
+              {userDetails.name}
+            </Text>
+            <Text> </Text>
+            <Text category="h6" style={themedStyle.text}>
+              Joe Mama
             </Text>
           </View>
-        </TouchableOpacity>
-        <Gallery items={{ uri: images }} />
-      </View>
+
+          <TouchableOpacity
+            style={{ width: "86%", marginTop: 10, alignItems: "center" }}
+            onPress={() => this.handleChatNavigation()}
+          >
+            <View style={themedStyle.signUpButton}>
+              <Text
+                style={{
+                  fontSize: 16,
+                  fontWeight: 200,
+                  letterSpacing: 0.5,
+                  color: "#000000",
+                }}
+              >
+                Chat with Joe Mama
+              </Text>
+            </View>
+          </TouchableOpacity>
+
+          <Image
+            style={themedStyle.tinyLogo}
+            source={require("../assets/image3.jpg")}
+          />
+          <View style={[themedStyle.header, themedStyle.bordered]}>
+            <Text category="h6" style={themedStyle.text}>
+              {userDetails.name}
+            </Text>
+            <Text> </Text>
+            <Text category="h6" style={themedStyle.text}>
+              John Doe
+            </Text>
+          </View>
+
+          <TouchableOpacity
+            style={{ width: "86%", marginTop: 10, alignItems: "center" }}
+            onPress={() => this.handleChat2Navigation()}
+          >
+            <View style={themedStyle.signUpButton}>
+              <Text
+                style={{
+                  fontSize: 16,
+                  fontWeight: 200,
+                  letterSpacing: 0.5,
+                  color: "#000000",
+                }}
+              >
+                Chat with John Doe
+              </Text>
+            </View>
+          </TouchableOpacity>
+        </View>
+      </ScrollView>
     );
   }
 }
@@ -78,6 +115,7 @@ export default Activity = withFirebaseHOC(
       backgroundColor: theme["color-basic-100"],
       marginTop: 60,
       alignItems: "center",
+      flex: 1,
     },
     header: {
       alignItems: "center",
@@ -148,6 +186,14 @@ export default Activity = withFirebaseHOC(
       height: 350,
       flexDirection: "column",
       justifyContent: "space-around",
+    },
+    separator: {
+      backgroundColor: theme["color-basic-400"],
+      alignSelf: "center",
+      flexDirection: "row",
+      flex: 0,
+      width: 1,
+      height: 42,
     },
   }))
 );

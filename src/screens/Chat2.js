@@ -43,8 +43,8 @@ class Chat extends Component {
 
   componentDidMount() {
     firebaseSvc.refOn((message) =>
-      this.setState((previousState) => ({
-        messages: GiftedChat.append(previousState.messages, message),
+      this.setState((currentState) => ({
+        messages: GiftedChat.append(currentState.messages, message),
       }))
     );
   }
